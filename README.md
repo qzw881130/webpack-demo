@@ -1,3 +1,13 @@
+#####
+```
+npm install live-server -g
+
+webpack-dev-server #development
+webpack #production
+
+```
+
+
 ##### Tutorial
 https://jspang.com/article/32#toc6
 
