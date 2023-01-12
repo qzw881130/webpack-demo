@@ -24,7 +24,10 @@ module.exports = {
             //   include: path.resolve(__dirname, "src"),
               use: extractTextPlugin.extract({
                 fallback: "style-loader",
-                use: "css-loader"
+                use: [
+                    { loader: 'css-loader', options: { importLoaders: 1 } },
+                    'postcss-loader'
+                ]
               })
             },{
                 test:/\.(png|jpg|gif)/ ,
