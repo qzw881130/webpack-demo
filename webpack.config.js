@@ -1,9 +1,10 @@
 const path = require('path');
 const uglify = require('uglifyjs-webpack-plugin');
 const htmlPlugin= require('html-webpack-plugin');
-const extractTextPlugin = require("extract-text-webpack-plugin");
 const glob = require('glob');
 const PurifyCSSPlugin = require("purifycss-webpack");
+const extractTextPlugin = require("extract-text-webpack-plugin");
+const webpack = require('webpack');
 
 
 if(process.env.type == "build"){
@@ -27,63 +28,22 @@ module.exports = {
         filename: '[name].js',
         publicPath:website.publicPath
     },
-    module: {
-        rules: [
-            {
-              test: /\.css$/,
-            //   include: path.resolve(__dirname, "src"),
-              use: extractTextPlugin.extract({
-                fallback: "style-loader",
-                use: [
-                    { loader: 'css-loader', options: { importLoaders: 1 } },
-                    'postcss-loader'
-                ]
-              })
-            },{
-                test:/\.(png|jpg|gif)/ ,
-                use:[{
-                    loader:'url-loader',
-                    options:{
-                        limit:500000, //是把小于500000B的文件打成Base64的格式，写入JS。
-                        outputPath: 'images/',
-                    }
-                }]
-            }, {
-                test: /\.(htm|html)$/i,
-                use: ['html-withimg-loader']
-            }, {
-                test: /\.less$/,
-                use: extractTextPlugin.extract({
-                    use: [{
-                        loader: "css-loader" // compiles Less to CSS
-                    },{
-                        loader: "less-loader" // translates CSS into CommonJS
-                    }],
-                    fallback: "style-loader"
-                })
-            },{
-                test: /\.scss|\.sass$/,
-                use: extractTextPlugin.extract({
-                    use: ["css-loader", "sass-loader"],
-                    fallback: 'style-loader',
-                })
-            }
-          ]
-    },
+    module: require('./webpack_config/module.js'),
     plugins: [
         // new uglify(),
         new htmlPlugin({
-            minify:{
-                removeAttributeQuotes:true
-            },
+            minify:{ removeAttributeQuotes:true },
             hash:true,
             template:'./src/index.html'
-
         }),
         new extractTextPlugin("/css/index.css"),
         new PurifyCSSPlugin({
             paths: glob.sync(path.join(__dirname, 'src/*.html')),
         }),
+        //import third party plugins
+        new webpack.ProvidePlugin({
+            $$:"jquery"
+        })
     ],
     devServer: {
         contentBase: path.resolve(__dirname, 'dist'),
