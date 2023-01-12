@@ -20,8 +20,8 @@ if(process.env.type == "build"){
 module.exports = {
     devtool: 'source-map',
     entry: {
-        entry: './src/entry.js',
-        entry2: './src/entry2.js',
+        app: './src/entry.js',
+        app2: './src/entry2.js',
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
