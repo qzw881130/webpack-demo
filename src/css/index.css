@@ -1,2 +1,4 @@
 body{background-color: red;color: white}
 #pic{width:200px;height:200px;background-image: url(../images/bird.jpg); background-size:100%;transform: rotate(45deg);}
+.no-use-style{color:aquamarine;background-color: gold}
+div{border: 1px dashed orchid;}

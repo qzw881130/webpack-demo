@@ -2,12 +2,22 @@ const path = require('path');
 const uglify = require('uglifyjs-webpack-plugin');
 const htmlPlugin= require('html-webpack-plugin');
 const extractTextPlugin = require("extract-text-webpack-plugin");
+const glob = require('glob');
+const PurifyCSSPlugin = require("purifycss-webpack");
 
-var website ={
-    publicPath:"http://127.0.0.1:1717/"
+
+if(process.env.type == "build"){
+    var website ={
+        publicPath:"http://127.0.0.1:1717/"
+    }
+}else{
+    var website ={
+        publicPath:"http://localhost:1717/"
+    }
 }
 
 module.exports = {
+    devtool: 'source-map',
     entry: {
         entry: './src/entry.js',
         entry2: './src/entry2.js',
@@ -71,7 +81,9 @@ module.exports = {
 
         }),
         new extractTextPlugin("/css/index.css"),
-
+        new PurifyCSSPlugin({
+            paths: glob.sync(path.join(__dirname, 'src/*.html')),
+        }),
     ],
     devServer: {
         contentBase: path.resolve(__dirname, 'dist'),
